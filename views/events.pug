@@ -1,0 +1,29 @@
+extends layout
+
+block content
+    div(id='main')
+      div(class='inner')
+        header(id='header')
+          h1= title
+          
+        section(id='banner')
+          div(class='content')
+            header
+              p= 'Listes des événements'
+              table
+                tr
+                  td Nom
+                  td Type
+                  td Date
+                  td Nombre jours
+                  
+                each event, i in eventlist
+                  tr
+                    td/a(href='/event/'+event._id)
+                      = event.nom
+                    td
+                      = event.type
+                    td
+                      = event.date                    
+                    td
+                      = event.nombreJours

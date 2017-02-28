@@ -1,0 +1,35 @@
+doctype html
+html
+  head
+    meta(charset='utf-8', lang= 'fr')
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/assets/css/main.css')
+  body
+    div(id='wrapper')
+      block content
+      
+      div(id='sidebar')
+        div(class='inner')
+          nav(id='menu')
+            header(class='major')
+              h2= 'Menu'
+            ul
+              li
+                a(href='/') Accueil
+              li
+                a(href='/event') Les événements
+              li
+                a(href='/insertEvent') Ajouter évènement
+              li
+                a(href='/request') Les demandes de figurants              
+                
+          footer(id='footer')
+            p(class='copyright') &copy; BTS SIO
+    
+    
+          
+    script(src='assets/js/jquery.min.js')
+    script(src='assets/js/skel.min.js')
+    script(src='assets/js/util.js')
+    script(src='assets/js/main.js')

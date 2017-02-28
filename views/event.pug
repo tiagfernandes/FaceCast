@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    div(id='main')
+      div(class='inner')
+        header(id='header')
+          h1= title
+          
+        section(id='banner')
+          div(class='content')
+            header
+              p= 'Evénements : '+ eventlist[0]._id
+                ul
+                  li Nom : 
+                    = eventlist[0].nom
+                  li Type : 
+                    = eventlist[0].type
+                  li Date : 
+                    = eventlist[0].date
+                  li Nombre jours : 
+                    = eventlist[0].nombreJours
+                  li Rôles demandés : 
+                    = eventlist[0].rolesDemandes
+                  li Nombre figurants : 
+                    = eventlist[0].nombreFigurants
+                  li Figurants : 
+                    = eventlist[0].figurants
+                  
