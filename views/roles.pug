@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    div(id='main')
+      div(class='inner')
+        header(id='header')
+          h1= title
+          
+        section(id='banner')
+          div(class='content')
+            header
+              p= 'Listes des rôles'
+              
+              form#formAddRole(name="addrole",method="post",action="/roles/add")
+                input#inputRoleName(type="text", placeholder="Nom", name="name")
+              
+                button#btnSubmit(type="submit") Ajouter rôle
+              
+              table
+                tr
+                  td Nom
+                  
+                each role, i in rolesliste
+                  tr
+                    td
+                      = role.nom

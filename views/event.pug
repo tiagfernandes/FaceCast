@@ -8,8 +8,7 @@ block content
           
         section(id='banner')
           div(class='content')
-            header
-              p= 'Evénements : '+ eventlist[0]._id
+            header              
                 ul
                   li Nom : 
                     = eventlist[0].nom
@@ -19,10 +18,23 @@ block content
                     = eventlist[0].date
                   li Nombre jours : 
                     = eventlist[0].nombreJours
-                  li Rôles demandés : 
-                    = eventlist[0].rolesDemandes
-                  li Nombre figurants : 
-                    = eventlist[0].nombreFigurants
-                  li Figurants : 
-                    = eventlist[0].figurants
-                  
+                 
+                table
+                  tr
+                    td Rôles demandés
+                    td Nombres demandés
+                    each offre, i in offrelist
+                      tr
+                        td
+                          = offre._role.nom
+                        td
+                          = offre.nbRoles
+                    
+                form#formAddEventRole(name="addEventRole",method="post",action="/events/"+ eventlist[0]._id +"/role/add")
+                  input#inputRoleNbFigurant(type="text", placeholder="Nombre", name="nbFigurant")
+                  select#inputRoleName(placeholder="Name", name="roleId")
+                    option -- Rôle --
+                    each role, i in roleslist
+                      option(value=role._id)= role.nom
+                  button#btnSubmit(type="submit") Ajouter rôle
+                
