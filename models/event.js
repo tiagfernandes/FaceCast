@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var eventSchema  = new mongoose.Schema({
     "nom" : String,
     "type" : String,
-    "date" : Date,
+    "date" : String,
     "nombreJours" : String
 });
 

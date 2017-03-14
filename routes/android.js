@@ -7,7 +7,7 @@ var postulation = require('../models/postulation');
 var figurant = require('../models/figurant');
 
 /* Liste des evenement JSon */
-router.get('/event', function(req, res, next) {
+router.get('/events', function(req, res, next) {
     var response = {};
 
     event.find({},{},function(err,events){
@@ -22,7 +22,7 @@ router.get('/event', function(req, res, next) {
 });
 
 /* Liste des offre par evenement JSon */
-router.get('/events/:id/offre', function(req, res, next) {
+router.get('/event/:id/offre', function(req, res, next) {
     var response = {};
     idEvent = req.params.id;
 
