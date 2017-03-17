@@ -1,0 +1,32 @@
+extends layout
+
+block content
+    div(id='main')
+      div(class='inner')
+        header(id='header')
+          h1= title
+          
+        section(id='banner')
+          div(class='content')
+            header
+              p= 'Listes des événements'
+              table
+                tr
+                  td Nom évènement
+                  td Date évènement
+                  td Rôle
+                  td Figurant
+                  td Etat
+                  
+                each postu, i in postulationlist
+                  tr
+                    td
+                      = postu._offre._event.nom 
+                    td
+                      = postu._offre._event.date                    
+                    td
+                      = postu._offre._role.nom
+                    td
+                      = postu._figurant.email
+                    td
+                      = postu.etat

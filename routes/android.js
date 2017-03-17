@@ -111,22 +111,66 @@ router.get('/postule/:idOffre/:email', function(req, res, next) {
             id = newFigurant._id;
         }
 
-        var newPostulation = new postulation({
-            "_figurant" : id,
-            "_offre" : idOffre,
-            "etat" : "En attente"
-        }); 
+        postulation.find({"_figurant": id,"_offre": idOffre},{},function(e,docs){
+            var idPost = null;
 
-        newPostulation.save( function (err, doc) {
-            if (err) {
-                // Retour d'une erreur
-                res.send("Postulation refusé");
+            docs.forEach(function(doc){
+                idPost=(doc._id);
+            });
+            
+            var date = new Date();
+            var jour = date.getDate();
+            var mois = date.getMonth();
+            var annee = date.getYear();
+            var dateAjout = jour+"/"+mois+"/"+annee;
+
+            if(idPost == null){
+                var newPostulation = new postulation({
+                    "_figurant" : id,
+                    "_offre" : idOffre,
+                    "etat" : "En attente",
+                    "dateAjout" : dateAjout
+                }); 
+
+                newPostulation.save( function (err, doc) {
+                    if (err) {
+                        // Retour d'une erreur
+                        res.send("Postulation refusé");
+                    }else {
+                        res.send("Validé !");
+                    }
+                });
             }
-            else {
-                // Redirection vers la liste
-                res.send("Vous avez postulé !");
+            else{
+                res.send("Vous avez déjà postulé !");
             }
         });
+    });
+});
+
+/* Liste des postulation JSon */
+router.get('/postu/:email', function(req, res, next) {
+    var response = {};
+    emailFigurant = req.params.email;
+
+    figurant.find({"email" : emailFigurant},{},function(e,docs){
+        var id = null;
+
+        docs.forEach(function(doc){
+            id=(doc._id);
+        });
+
+        postulation.find({ "_figurant" : id},{},function(err, postulations){
+            if (err) {
+                response = {"error" : true,"message" : "Error fetching data"};
+            } else {
+                response = {postulations};
+            }
+
+            res.json(response);
+        }).populate('_figurant')
+            .populate({path: '_offre',populate: {path: '_event', model: 'event'}})
+            .populate({path: '_offre', populate: {path: '_role' , model: 'role'} });
     });
 });
 
