@@ -17,6 +17,7 @@ block content
                   td Rôle
                   td Figurant
                   td Etat
+                  td 
                   
                 each postu, i in postulationlist
                   tr
@@ -30,3 +31,16 @@ block content
                       = postu._figurant.email
                     td
                       = postu.etat
+                    td 
+                      form#formUpdateEtat(name="updateEtat",method="post",action="/postulations/update/"+postu._id)
+                        select#selectEtat(name="etat")
+                          option -- Changer Etat--
+                            if(postu.etat == "En attente")
+                              option(value="Retenu") Retenue
+                              option(value="Refuser") Refuser 
+                            if(postu.etat == "Retenu")
+                              option(value="Accepter") Accepter
+                              option(value="Refuser") Refuser
+                            if(postu.etat == "Accepter" || postu.etat == "Refuser")
+                              option(value="Terminer") Terminer
+                        button#btnSubmit(type="submit") Modifier
