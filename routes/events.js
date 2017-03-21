@@ -3,6 +3,7 @@ var router = express.Router();
 var event = require('../models/event');
 var roles = require('../models/roles');
 var offreRoles = require('../models/offreRoles');
+var postulation = require('../models/postulation');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {    
@@ -26,7 +27,8 @@ router.get('/:id', function(req, res, next) {
                     "roleslist" : roleDocs,
                     "offrelist" : offreDocs
                 })    
-            }).populate('_event').populate('_role');
+            }).populate('_event')
+                .populate('_role');
         });
     });
 
@@ -39,7 +41,7 @@ router.post('/:id/role/add', function(req, res) {
     // Valeurs du formulaire
     var roleId = req.body.roleId;
     var roleNbFigurant = req.body.nbFigurant;
-    
+
     var newOffreRoles = new offreRoles({
         "_event" : id,
         "_role" : roleId,
