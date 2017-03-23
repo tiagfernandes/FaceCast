@@ -91,4 +91,18 @@ router.get('/delete/:id', function(req, res, next) {
 });
 
 
+/* Delete offre lié à l'évènement */
+router.get('/delete/:id/offre/:idOffre', function(req, res, next) {    
+    id = req.params.id;
+    idOffre = req.params.idOffre;
+
+    postulation.remove({ "_offre": idOffre }, function (err) {
+        offreRoles.remove({ "_id" : idOffre, "_event" : id }, function (err) {
+            if (err) return handleError(err);
+            res.redirect("/events/"+id);
+        });
+    });
+});
+
+
 module.exports = router;

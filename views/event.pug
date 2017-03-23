@@ -29,6 +29,7 @@ block content
                           = offre._role.nom
                         td
                           = offre.nbRoles
+                        td/a(href="/events/delete/"+eventlist[0]._id+"/offre/"+offre._id) Delete
                     
                 form#formAddEventRole(name="addEventRole",method="post",action="/events/"+ eventlist[0]._id +"/role/add")
                   input#inputRoleNbFigurant(type="text", placeholder="Nombre", name="nbFigurant")

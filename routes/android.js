@@ -193,5 +193,14 @@ router.get('/postu/:email', function(req, res, next) {
     });
 });
 
+router.get('/postulation/:id/delete', function(req, res, next) {
+    id = req.params.id;
+
+    //On cherche le figurant correspondant à l'email
+    postulation.remove({ "_id": id }, function (err) {
+        if (err) return handleError(err);
+        res.send('Supprimé !')
+    });
+});
 
 module.exports = router;
