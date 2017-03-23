@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var event = require('../models/event');
 
+
+/* Home page ajout évènement */
 router.get('/', function(req, res, next) {
     res.render('insert', {
         "title" : "Ajout évènement"
@@ -9,8 +11,9 @@ router.get('/', function(req, res, next) {
 });
 
 
+/* Ajout d'un évènement */
 router.post('/add', function(req, res) {
-    // Valeurs du formulaire
+    //Récupère les valeurs du formulaire
     var eventName = req.body.name;
     var eventType = req.body.type;
     var eventDate = req.body.date;
@@ -34,5 +37,6 @@ router.post('/add', function(req, res) {
         }
     });
 });
+
 
 module.exports = router;
