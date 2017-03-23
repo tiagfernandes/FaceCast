@@ -105,15 +105,11 @@ router.get('/postule/:idOffre/:email', function(req, res, next) {
     emailFigurant = req.params.email;
 
     //Recherche du figurant avec l'email dans la base de données
-    figurant.find({"email" : emailFigurant},{},function(e,docs){
+    figurant.findOne({"email" : emailFigurant},{},function(e,docs){
         var id = null;
 
-        docs.forEach(function(doc){
-            id=(doc._id);
-        });
-
-        //Si aucun figurant trouvé avec email on le créer
-        if(id == null){
+        //Si l'email ne correspond à aucun figurant on creer un nouveau figurant
+        if(!docs){
             var newFigurant = new figurant({
                 "email" : emailFigurant
             });
@@ -127,17 +123,15 @@ router.get('/postule/:idOffre/:email', function(req, res, next) {
             //Récupère son id
             id = newFigurant._id;
         }
+        //Sinon on recupere l'id
+        else{
+            id = docs._id;
+        }
 
         //Recherche si la postulation du figurant n'existe pas
-        postulation.find({"_figurant": id,"_offre": idOffre},{},function(e,docs){
-            var idPost = null;
-
-            docs.forEach(function(doc){
-                idPost=(doc._id);
-            });
-
-            //Si elle n'existe pas, on créer la postulation
-            if(idPost == null){
+        postulation.findOne({"_figurant": id,"_offre": idOffre},{},function(e,docs){
+            //Si la postulation du figurant n'existe pas
+            if(!docs){
                 //Date actuelle
                 var date = new Date();
                 var jour = date.getDate();
@@ -176,27 +170,26 @@ router.get('/postu/:email', function(req, res, next) {
     emailFigurant = req.params.email;
 
     //On cherche le figurant correspondant à l'email
-    figurant.find({"email" : emailFigurant},{},function(e,docs){
-        var id = null;
-
-        docs.forEach(function(doc){
-            id=(doc._id);
-        });
-        
-        //On recherche les postulation du figurant avec son id
-        postulation.find({ "_figurant" : id},{},function(err, postulations){
-            if (err) {
-                response = {"error" : true,"message" : "Error fetching data"};
-            } else {
-                response = {postulations};
-            }
-            //Retourne les postulations du figurant
-            res.json(response);
-        }).populate('_figurant')
-            .populate({path: '_offre',populate: {path: '_event', model: 'event'}})
-            .populate({path: '_offre', populate: {path: '_role' , model: 'role'} });
-        //Le populate est un processus de remplacement automatique des chemins spécifiés
-        //dans l'object par des objects provenant d'autres collections
+    figurant.findOne({"email" : emailFigurant},{},function(e,docs){
+        if(!docs){
+            res.status(404).send("Aucun figurant trouvé");
+        }
+        else{
+            //On recherche les postulation du figurant avec son id
+            postulation.find({ "_figurant" : docs._id},{},function(err, postulations){
+                if (err) {
+                    response = {"error" : true,"message" : "Error fetching data"};
+                } else {
+                    response = {postulations};
+                }
+                //Retourne les postulations du figurant
+                res.json(response);
+            }).populate('_figurant')
+                .populate({path: '_offre',populate: {path: '_event', model: 'event'}})
+                .populate({path: '_offre', populate: {path: '_role' , model: 'role'} });
+            //Le populate est un processus de remplacement automatique des chemins spécifiés
+            //dans l'object par des objects provenant d'autres collections
+        }
     });
 });
 

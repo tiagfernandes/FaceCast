@@ -36,7 +36,6 @@ router.get('/:id', function(req, res, next) {
             //dans l'object par des objects provenant d'autres collections
         });
     });
-
 });
 
 
@@ -64,6 +63,30 @@ router.post('/:id/role/add', function(req, res) {
             // Redirection vers la liste
             res.redirect("/events/"+id);
         }
+    });
+});
+
+
+/* Delete évènement par son id */
+router.get('/delete/:id', function(req, res, next) {    
+    id = req.params.id;
+
+    //Récupère les id des offres liés à l'évènement pour supprimer les postulation liés avec ces offres
+    offreRoles.find({"_event" : id},{},function(e,offreDocs){
+        var arrayIdOffre = [];
+
+        for(var i = 0; offreDocs.length > i; i++){
+            arrayIdOffre.push(offreDocs[i]._id);
+        }
+
+        event.remove({ "_id": id }, function (err) {
+            postulation.remove({ "_offre": { $in: arrayIdOffre } }, function (err) {
+                offreRoles.remove({ "_event": id }, function (err) {
+                    if (err) return handleError(err);
+                    res.redirect("/events");
+                });
+            });
+        });
     });
 });
 
