@@ -4,7 +4,18 @@ var event = require('../models/event');
 var roles = require('../models/roles');
 var offreRoles = require('../models/offreRoles');
 var postulation = require('../models/postulation');
-//var nomFigurant = require('.../models/figurant');
+var bodyParser = require('../node_modules/body-parser');
+var methodOverride = require('../node_modules/method-override');
+
+router.use(bodyParser.urlencoded({ extended: true }))
+router.use(methodOverride(function(req, res){
+      if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+        // look in urlencoded POST bodies and delete it
+        var method = req.body._method
+        delete req.body._method
+        return method
+      }
+}))
 
 
 /* GET home page, liste des évènements existant */
@@ -84,7 +95,7 @@ router.post('/:id/role/add', function(req, res) {
 
 
 /* Delete évènement par son id */
-router.get('/delete/:id', function(req, res, next) {    
+router.delete('/delete/:id', function(req, res, next) {    
     id = req.params.id;
 
     //Récupère les id des offres liés à l'évènement pour supprimer les postulation liés avec ces offres
@@ -107,7 +118,7 @@ router.get('/delete/:id', function(req, res, next) {
 });
 
 /* Changer l'état de la postulation */
-router.post('/update/:id',function(req, res, next) {
+router.put('/update/:id',function(req, res, next) {
     //Récupère l'id en paramètre
     id = req.params.id;
     //Récupère valeur du formulaire
@@ -128,7 +139,7 @@ router.post('/update/:id',function(req, res, next) {
 
 // Test 
 /* Changer l'état de la postulation */
-router.post('/:id/update/:idPostu',function(req, res, next) {
+router.put('/:id/update/:idPostu',function(req, res, next) {
     //Récupère l'id en paramètre
     id = req.params.id;
     idPostu = req.params.idPostu;
@@ -151,7 +162,7 @@ router.post('/:id/update/:idPostu',function(req, res, next) {
 
 
 /* Delete offre lié à l'évènement */
-router.get('/delete/:id/offre/:idOffre', function(req, res, next) {    
+router.delete('/delete/:id/offre/:idOffre', function(req, res, next) {    
     id = req.params.id;
     idOffre = req.params.idOffre;
 

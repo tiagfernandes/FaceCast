@@ -54,6 +54,7 @@ block content
                           = postulation.etat
                         td 
                           form#formUpdateEtat(name="updateEtat",method="post",action="/events/"+ eventlist._id+"/update/"+postulation._id)
+                            input(type='hidden',value='PUT',name='_method')
                             select#selectEtat(name="etat")
                               option -- Changer Etat--
                                 if(postulation.etat == "En attente")
@@ -65,10 +66,8 @@ block content
                                 if(postulation.etat == "Accepter" || postulation.etat == "Refuser")
                                   option(value="Terminer") Terminer
                             button#btnSubmit(type="submit") Modifier
-                    
-
-                          
-
-                  
-                  
-                p/a(href="/events/delete/"+eventlist._id) Supprimer l'évènement
+                
+                
+                form(action="/events/delete/"+eventlist._id, method='post')
+                  input(type='hidden',value='DELETE',name='_method')  
+                  button Supprimer l'évènement
