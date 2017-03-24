@@ -4,6 +4,7 @@ var event = require('../models/event');
 var roles = require('../models/roles');
 var offreRoles = require('../models/offreRoles');
 var postulation = require('../models/postulation');
+//var nomFigurant = require('.../models/figurant');
 
 
 /* GET home page, liste des évènements existant */
@@ -20,22 +21,37 @@ router.get('/', function(req, res, next) {
 /* GET l'évènement par son id */
 router.get('/:id', function(req, res, next) {    
     id = req.params.id;
-
-    event.find({"_id": id},{},function(e,eventDocs){
+    // Res = résultat
+    // ""Docs renvoi un résultat de la requête
+    // res.render('view')
+    event.findOne({"_id": id},{},function(e,eventDocs){
         roles.find({},{},function(e,roleDocs){
             offreRoles.find({"_event" : id},{},function(e,offreDocs){
-                res.render('event', {
-                    "title" : "Evénement",
-                    "eventlist" : eventDocs,
-                    "roleslist" : roleDocs,
-                    "offrelist" : offreDocs
-                })    
-            }).populate('_event')
-                .populate('_role');
-            //Le populate est un processus de remplacement automatique des chemins spécifiés
-            //dans l'object par des objects provenant d'autres collections
+                // On récupère la collection offreDocs(le resultat)
+                // findOne recupère une valeur qui serra un objet
+                var arrayIdOffre = [];
+                
+                for(var i = 0; offreDocs.length > i; i++){
+                    arrayIdOffre.push(offreDocs[i]._id);
+                }
+                
+                postulation.find({ "_offre": { $in: arrayIdOffre } },{},function(e,postulationDocs){
+                    res.render('event', {
+                        "title" : "Evénement",
+                        "eventlist" : eventDocs,
+                        "roleslist" : roleDocs,
+                        "offrelist" : offreDocs,
+                        "postulationlist" : postulationDocs
+
+                    })    
+                }).populate('_event')
+                    .populate('_figurant')
+                    .populate('_offre').populate({path: '_offre', populate: {path: '_role' , model: 'role'} });
+                //Le populate est un processus de remplacement automatique des chemins spécifiés
+                //dans l'object par des objects provenant d'autres collections
+                }).populate('_role');
+            });
         });
-    });
 });
 
 
@@ -89,6 +105,49 @@ router.get('/delete/:id', function(req, res, next) {
         });
     });
 });
+
+/* Changer l'état de la postulation */
+router.post('/update/:id',function(req, res, next) {
+    //Récupère l'id en paramètre
+    id = req.params.id;
+    //Récupère valeur du formulaire
+    etat = req.body.etat;
+    
+    //Recherche la postulation avec l'id et la modifie son état
+    postulation.findOneAndUpdate({"_id": id},{ $set:{ "etat": etat} }, function(e,docs){
+        if(e){
+            res.status(500).send(e);  
+        }
+        else{       
+            // Redirection vers la liste
+            res.redirect("/events");
+        }
+    });
+});
+
+
+// Test 
+/* Changer l'état de la postulation */
+router.post('/:id/update/:idPostu',function(req, res, next) {
+    //Récupère l'id en paramètre
+    id = req.params.id;
+    idPostu = req.params.idPostu;
+    //Récupère valeur du formulaire
+    etat = req.body.etat;
+    
+    //Recherche la postulation avec l'id et la modifie son état
+    postulation.findOneAndUpdate({"_id": idPostu},{ $set:{ "etat": etat} }, function(e,docs){
+        if(e){
+            res.status(500).send(e);  
+        }
+        else{       
+            // Redirection vers la liste
+            res.redirect("/events/"+id);
+        }
+    });
+});
+
+// Fin de test
 
 
 /* Delete offre lié à l'évènement */

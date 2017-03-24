@@ -8,4 +8,5 @@ var eventSchema  = new mongoose.Schema({
     "nombreJours" : String
 });
 
+// modele 
 module.exports = mongoose.model('event',eventSchema,'events');

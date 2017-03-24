@@ -11,13 +11,13 @@ block content
             header              
                 ul
                   li Nom : 
-                    = eventlist[0].nom
+                    = eventlist.nom
                   li Type : 
-                    = eventlist[0].type
+                    = eventlist.type
                   li Date : 
-                    = eventlist[0].date
+                    = eventlist.date
                   li Nombre jours : 
-                    = eventlist[0].nombreJours
+                    = eventlist.nombreJours
                  
                 table
                   tr
@@ -29,9 +29,9 @@ block content
                           = offre._role.nom
                         td
                           = offre.nbRoles
-                        td/a(href="/events/delete/"+eventlist[0]._id+"/offre/"+offre._id) Delete
+                        td/a(href="/events/delete/"+eventlist._id+"/offre/"+offre._id) Delete
                     
-                form#formAddEventRole(name="addEventRole",method="post",action="/events/"+ eventlist[0]._id +"/role/add")
+                form#formAddEventRole(name="addEventRole",method="post",action="/events/"+ eventlist._id +"/role/add")
                   input#inputRoleNbFigurant(type="text", placeholder="Nombre", name="nbFigurant")
                   select#inputRoleName(placeholder="Name", name="roleId")
                     option -- Rôle --
@@ -39,5 +39,36 @@ block content
                       option(value=role._id)= role.nom
                   button#btnSubmit(type="submit") Ajouter rôle 
                   
+                table
+                  tr
+                    td Rôles 
+                    td Nom Figurant
+                    td Etat
+                    each postulation, i in postulationlist
+                      tr
+                        td
+                          = postulation._offre._role.nom       
+                        td
+                          = postulation._figurant.email
+                        td
+                          = postulation.etat
+                        td 
+                          form#formUpdateEtat(name="updateEtat",method="post",action="/events/"+ eventlist._id+"/update/"+postulation._id)
+                            select#selectEtat(name="etat")
+                              option -- Changer Etat--
+                                if(postulation.etat == "En attente")
+                                  option(value="Retenu") Retenue
+                                  option(value="Refuser") Refuser 
+                                if(postulation.etat == "Retenu")
+                                  option(value="Accepter") Accepter
+                                  option(value="Refuser") Refuser
+                                if(postulation.etat == "Accepter" || postulation.etat == "Refuser")
+                                  option(value="Terminer") Terminer
+                            button#btnSubmit(type="submit") Modifier
+                    
+
+                          
+
                   
-                p/a(href="/events/delete/"+eventlist[0]._id) Supprimer l'évènement
+                  
+                p/a(href="/events/delete/"+eventlist._id) Supprimer l'évènement

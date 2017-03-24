@@ -17,25 +17,5 @@ router.get('/', function(req, res, next) {
         //dans l'object par des objects provenant d'autres collections
 });
 
-  
-/* Changer l'état de la postulation */
-router.post('/update/:id',function(req, res, next) {
-    //Récupère l'id en paramètre
-    id = req.params.id;
-    //Récupère valeur du formulaire
-    etat = req.body.etat;
-    
-    //Recherche la postulation avec l'id et la modifie son état
-    postulation.findOneAndUpdate({"_id": id},{ $set:{ "etat": etat} }, function(e,docs){
-        if(e){
-            res.status(500).send(e);  
-        }
-        else{       
-            // Redirection vers la liste
-            res.redirect("/postulations");
-        }
-    });
-});
-
 
 module.exports = router;
