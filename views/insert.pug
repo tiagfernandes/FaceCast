@@ -10,13 +10,13 @@ block content
           div(class='content')
             header
               h2= 'Formulaire'
-            form#formAddUser(name="adduser",method="post",action="/insert/add")
-              input#inputEventName(type="text", placeholder="Name", name="name")     
-              select#inputEventType(placeholder="Type", name="type")
+            form(id="addEvent", name="adduser",method="post",action="/insert/add")
+              input(id="name", type="text", placeholder="Name", name="name")     
+              select(id="type", placeholder="Type", name="type")
                 option -- Type --
                 option Film
                 option Spéctacle
-              input#inputEventDate(type="text", placeholder="Date", name="date")
-              input#inputEventNbJours(type="text", placeholder="Nombre jours", name="nbJours")
+              input(id="date", type="text", placeholder="Date", name="date")
+              input(id="nbJours", type="text", placeholder="Nombre jours", name="nbJours")
               
               button#btnSubmit(type="submit") submit

@@ -23,13 +23,14 @@ block content
                   tr
                     td Rôles demandés
                     td Nombres demandés
+                    td 
                     each offre, i in offrelist
                       tr
                         td
                           = offre._role.nom
                         td
                           = offre.nbRoles
-                        td/a(href="/events/delete/"+eventlist._id+"/offre/"+offre._id) Delete
+                        td/button(onclick="deleteOffre('"+eventlist._id+"', '"+offre._id+"')") Supprimer
                     
                 form#formAddEventRole(name="addEventRole",method="post",action="/events/"+ eventlist._id +"/role/add")
                   input#inputRoleNbFigurant(type="text", placeholder="Nombre", name="nbFigurant")
@@ -44,6 +45,7 @@ block content
                     td Rôles 
                     td Nom Figurant
                     td Etat
+                    td Modifier état
                     each postulation, i in postulationlist
                       tr
                         td
@@ -53,9 +55,10 @@ block content
                         td
                           = postulation.etat
                         td 
-                          form#formUpdateEtat(name="updateEtat",method="post",action="/events/"+ eventlist._id+"/update/"+postulation._id)
-                            input(type='hidden',value='PUT',name='_method')
-                            select#selectEtat(name="etat")
+                          form(id="updateEtat", name="updateEtat", method="post", action="/events/"+ eventlist._id+"/update/"+postulation._id)
+                            input(id='idEvent', value= eventlist._id, type='hidden')
+                            input(id='idPostulation', value= postulation._id, type='hidden')
+                            select(id="etat", name="etat")
                               option -- Changer Etat--
                                 if(postulation.etat == "En attente")
                                   option(value="Retenu") Retenue
@@ -68,6 +71,5 @@ block content
                             button#btnSubmit(type="submit") Modifier
                 
                 
-                form(action="/events/delete/"+eventlist._id, method='post')
-                  input(type='hidden',value='DELETE',name='_method')  
-                  button Supprimer l'évènement
+                button(onclick="deleteEvent('"+eventlist._id+"')") Supprimer
+                

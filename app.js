@@ -17,7 +17,6 @@ var events = require('./routes/events');
 var insert = require('./routes/insert');
 var roles = require('./routes/roles');
 var android = require('./routes/android');
-var postulations = require('./routes/postulations');
 
 var app = express();
 
@@ -44,7 +43,6 @@ app.use('/events', events);
 app.use('/insert', insert);
 app.use('/roles', roles);
 app.use('/android', android);
-app.use('/postulations', postulations);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

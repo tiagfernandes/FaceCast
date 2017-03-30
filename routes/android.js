@@ -5,19 +5,6 @@ var offre = require('../models/offreRoles');
 var roles = require('../models/roles');
 var postulation = require('../models/postulation');
 var figurant = require('../models/figurant');
-var bodyParser = require('../node_modules/body-parser');
-var methodOverride = require('../node_modules/method-override');
-
-router.use(bodyParser.urlencoded({ extended: true }))
-router.use(methodOverride(function(req, res){
-      if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-        // look in urlencoded POST bodies and delete it
-        var method = req.body._method
-        delete req.body._method
-        return method
-      }
-}))
-
 
 /* Liste des évènements JSon */
 router.get('/events', function(req, res, next) {
@@ -55,8 +42,8 @@ router.get('/event/:id/offre', function(req, res, next) {
 });
 
 
-/* Liste des rôles JSon */
-router.get('/roles', function(req, res, next) {
+/* Liste des offres JSon */
+router.get('/offres', function(req, res, next) {
     var response = {};
 
     roles.find({},{},function(err,roles){
@@ -72,7 +59,7 @@ router.get('/roles', function(req, res, next) {
 
 
 /* Liste des rôles par évènement JSon */
-router.get('/roles/:id/offre', function(req, res, next) {
+router.get('/offres/:id/events', function(req, res, next) {
     var response = {};
     idRole = req.params.id;
 
@@ -111,7 +98,7 @@ router.get('/offre/:id', function(req, res, next) {
 
 
 /* Le figurant postule avec son email à une offre */
-router.get('/postule/:idOffre/:email', function(req, res, next) {
+router.post('/postule/:idOffre/:email', function(req, res, next) {
     //Récupère les données de l'url
     idOffre = req.params.idOffre;
     emailFigurant = req.params.email;
@@ -205,7 +192,7 @@ router.get('/postu/:email', function(req, res, next) {
     });
 });
 
-router.get('/postulation/:id/delete', function(req, res, next) {
+router.delete('/postulation/:id/delete', function(req, res, next) {
     id = req.params.id;
 
     //On cherche le figurant correspondant à l'email

@@ -4,18 +4,6 @@ var event = require('../models/event');
 var roles = require('../models/roles');
 var offreRoles = require('../models/offreRoles');
 var postulation = require('../models/postulation');
-var bodyParser = require('../node_modules/body-parser');
-var methodOverride = require('../node_modules/method-override');
-
-router.use(bodyParser.urlencoded({ extended: true }))
-router.use(methodOverride(function(req, res){
-      if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-        // look in urlencoded POST bodies and delete it
-        var method = req.body._method
-        delete req.body._method
-        return method
-      }
-}))
 
 
 /* GET home page, liste des évènements existant */
@@ -109,35 +97,15 @@ router.delete('/delete/:id', function(req, res, next) {
         event.remove({ "_id": id }, function (err) {
             postulation.remove({ "_offre": { $in: arrayIdOffre } }, function (err) {
                 offreRoles.remove({ "_event": id }, function (err) {
-                    if (err) return handleError(err);
-                    res.redirect("/events");
+                    if (err) res.send('error');
+                    res.send('success');
                 });
             });
         });
     });
 });
 
-/* Changer l'état de la postulation */
-router.put('/update/:id',function(req, res, next) {
-    //Récupère l'id en paramètre
-    id = req.params.id;
-    //Récupère valeur du formulaire
-    etat = req.body.etat;
-    
-    //Recherche la postulation avec l'id et la modifie son état
-    postulation.findOneAndUpdate({"_id": id},{ $set:{ "etat": etat} }, function(e,docs){
-        if(e){
-            res.status(500).send(e);  
-        }
-        else{       
-            // Redirection vers la liste
-            res.redirect("/events");
-        }
-    });
-});
 
-
-// Test 
 /* Changer l'état de la postulation */
 router.put('/:id/update/:idPostu',function(req, res, next) {
     //Récupère l'id en paramètre
@@ -153,12 +121,10 @@ router.put('/:id/update/:idPostu',function(req, res, next) {
         }
         else{       
             // Redirection vers la liste
-            res.redirect("/events/"+id);
+            res.send("success");
         }
     });
 });
-
-// Fin de test
 
 
 /* Delete offre lié à l'évènement */
@@ -169,7 +135,7 @@ router.delete('/delete/:id/offre/:idOffre', function(req, res, next) {
     postulation.remove({ "_offre": idOffre }, function (err) {
         offreRoles.remove({ "_id" : idOffre, "_event" : id }, function (err) {
             if (err) return handleError(err);
-            res.redirect("/events/"+id);
+            res.send("success");
         });
     });
 });

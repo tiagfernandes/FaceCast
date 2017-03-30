@@ -11,8 +11,8 @@ block content
             header
               p= 'Listes des rôles'
               
-              form#formAddRole(name="addrole",method="post",action="/roles/add")
-                input#inputRoleName(type="text", placeholder="Nom", name="name")
+              form(id="addRole", name="addRole",method="post",action="/roles/add")
+                input(id="name", type="text", placeholder="Nom", name="name")
               
                 button#btnSubmit(type="submit") Ajouter rôle
               
